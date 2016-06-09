@@ -50,6 +50,8 @@
 	var warn = debug('components:look-at:warn');
 	var isCoordinate = coordinates.isCoordinate;
 
+	delete AFRAME.components['look-at'];
+
 	/**
 	 * Look-at component.
 	 *
