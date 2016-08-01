@@ -17,21 +17,21 @@
       </a-sphere>
 
       <!-- Entities look at the target -->
-      <a-box width="1" depth="1" height="1" color="#4CC3D9" look-at="#target"
+      <a-box width="1" depth="1" height="1" color="#4CC3D9" look-at="src: #target"
              position="-4 0 -2"></a-box>
-      <a-cylinder radius="0.6" height="2" color="#7BC8A4" look-at="#target"
+      <a-cylinder radius="0.6" height="2" color="#7BC8A4" look-at="src: #target"
                   position="0 0 -2"></a-cylinder>
-      <a-box width="0.5" depth="1" height="2" color="#F16745" look-at="#target"
+      <a-box width="0.5" depth="1" height="2" color="#F16745" look-at="src: #target"
              position="4 0 -2"></a-box>
-      <a-cylinder radius="0.2" height="2" color="#7BC8A4" look-at="#target"
+      <a-cylinder radius="0.2" height="2" color="#7BC8A4" look-at="src: #target"
                   position="-4 0 1"></a-cylinder>
-      <a-box width="2" depth="1" height="0.25" color="#93648D" look-at="#target"
+      <a-box width="2" depth="1" height="0.25" color="#93648D" look-at="src: #target"
              position="0 0 1"></a-box>
-      <a-box width="1" depth="2" height="0.5" color="#999" look-at="#target"
+      <a-box width="1" depth="2" height="0.5" color="#999" look-at="src: #target"
              position="4 0 1"></a-box>
 
       <!-- This entity looks at the camera. Use WASD controls to test it -->
-      <a-box width="2" depth="2" height="2" color="#FFC65D" look-at="#camera"
+      <a-box width="2" depth="2" height="2" color="#FFC65D" billboard
              position="-6 2.5 -2"></a-box>
 
       <a-sky color="#ECECEC"></a-sky>

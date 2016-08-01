@@ -124,16 +124,71 @@
 	  },
 
 	  tick: function (t) {
+	    var self = this;
+	    var target = self.data;
+	    var object3D = self.el.object3D;
+	    var targetEl;
+
 	    // Track target object position. Depends on parent object keeping global transforms up
 	    // to state with updateMatrixWorld(). In practice, this is handled by the renderer.
-	    var target3D = this.target3D;
-	    if (target3D) {
-	      return this.el.object3D.lookAt(this.vector.setFromMatrixPosition(target3D.matrixWorld));
+
+	    if (typeof self.data === 'string') {
+	      targetEl = self.el.sceneEl.querySelector(target);
+	      if (!targetEl) {
+	        warn('"' + target + '" does not point to a valid entity to look-at');
+	        this.target3D = null;
+	        return;
+	      }
+	      if (!targetEl.hasLoaded) {
+	        return targetEl.addEventListener('loaded', function () {
+	          self.beginTracking(targetEl);
+	        });
+	      } else {
+	        self.beginTracking(targetEl);
+	      }
+	    }
+
+	    if (this.target3D) { 
+	      this.vector.setFromMatrixPosition(this.target3D.matrixWorld);
+	      if (object3D.parent) {
+	        object3D.parent.updateMatrixWorld();
+	        object3D.parent.worldToLocal(this.vector);
+	      }
+	      return object3D.lookAt(this.vector);
 	    }
 	  },
 
 	  beginTracking: function (targetEl) {
 	    this.target3D = targetEl.object3D;
+	  }
+	});
+
+	/**
+	 * Billboard component.
+	 *
+	 * Modifies rotation to track the current camera, keeping the entity facing it 
+	 *
+	 */
+	AFRAME.registerComponent('billboard', {
+	  init: function () {
+	    this.vector = new THREE.Vector3();
+	  },
+
+	  tick: function (t) {
+	    var self = this;
+	    var target = self.el.sceneEl.camera;
+	    var object3D = self.el.object3D;
+
+	    // make sure camera is set
+	    if (target) { 
+	      var target3D = target.object3D;
+	      this.vector.setFromMatrixPosition(target3D.matrixWorld);
+	      if (object3D.parent) {
+	        object3D.parent.updateMatrixWorld();
+	        object3D.parent.worldToLocal(this.vector);
+	      }
+	      return object3D.lookAt(this.vector);
+	    }
 	  }
 	});
 
