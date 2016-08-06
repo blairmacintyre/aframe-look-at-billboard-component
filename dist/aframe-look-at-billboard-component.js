@@ -63,22 +63,30 @@
 	 */
 	AFRAME.registerComponent('look-at', {
 	  schema: {
-	    default: '',
+	    src: {
+	      default: '',
 
-	    parse: function (value) {
-	      // A static position to look at.
-	      if (isCoordinate(value) || typeof value === 'object') {
-	        return coordinates.parse(value);
-	      }
-	      // A selector to a target entity.
-	      return value;
+	      parse: function (value) {
+	        // A static position to look at.
+	        if (isCoordinate(value) || typeof value === 'object') {
+	          return coordinates.parse(value);
+	        }
+	        // A selector to a target entity.
+	        return value;
+	      },
+
+	      stringify: function (data) {
+	        if (typeof data === 'object') {
+	          return coordinates.stringify(data);
+	        }
+	        return data;
+	      },
 	    },
-
-	    stringify: function (data) {
-	      if (typeof data === 'object') {
-	        return coordinates.stringify(data);
-	      }
-	      return data;
+	    checkSrcEveryFrame: {
+	      default: false,
+	    },
+	    updateWorldTransform: {
+	      default: false,
 	    }
 	  },
 
@@ -93,7 +101,7 @@
 	   */
 	  update: function () {
 	    var self = this;
-	    var target = self.data;
+	    var target = self.data.src;
 	    var object3D = self.el.object3D;
 	    var targetEl;
 
@@ -107,10 +115,16 @@
 	      return object3D.lookAt(new THREE.Vector3(target.x, target.y, target.z));
 	    }
 
+	    return this.updateTarget(target);
+	  },
+
+	  updateTarget: function (target) {
+	    var self = this;
+
 	    // Assume target is a string.
 	    // Query for the element, grab its object3D, then register a behavior on the scene to
 	    // track the target on every tick.
-	    targetEl = self.el.sceneEl.querySelector(target);
+	    targetEl = this.el.sceneEl.querySelector(target);
 	    if (!targetEl) {
 	      warn('"' + target + '" does not point to a valid entity to look-at');
 	      return;
@@ -125,14 +139,16 @@
 
 	  tick: function (t) {
 	    var self = this;
-	    var target = self.data;
+	    var target = self.data.target;
 	    var object3D = self.el.object3D;
 	    var targetEl;
 
-	    // Track target object position. Depends on parent object keeping global transforms up
-	    // to state with updateMatrixWorld(). In practice, this is handled by the renderer.
+	    // Track target object position. Depends on parent object keeping 
+	    // global transforms up to state with updateMatrixWorld(). 
+	    // In practice, this is handled by the renderer, but will result in 
+	    // 
 
-	    if (typeof self.data === 'string') {
+	    if (typeof self.data.target === 'string' && self.data.checkSrcEveryFrame) {
 	      targetEl = self.el.sceneEl.querySelector(target);
 	      if (!targetEl) {
 	        warn('"' + target + '" does not point to a valid entity to look-at');
@@ -151,7 +167,9 @@
 	    if (this.target3D) { 
 	      this.vector.setFromMatrixPosition(this.target3D.matrixWorld);
 	      if (object3D.parent) {
-	        object3D.parent.updateMatrixWorld();
+	        if (this.data.updateWorldTransform) {
+	          object3D.parent.updateMatrixWorld();
+	        }
 	        object3D.parent.worldToLocal(this.vector);
 	      }
 	      return object3D.lookAt(this.vector);
@@ -181,8 +199,7 @@
 
 	    // make sure camera is set
 	    if (target) { 
-	      var target3D = target.object3D;
-	      this.vector.setFromMatrixPosition(target3D.matrixWorld);
+	      this.vector.setFromMatrixPosition(target.matrixWorld);
 	      if (object3D.parent) {
 	        object3D.parent.updateMatrixWorld();
 	        object3D.parent.worldToLocal(this.vector);
