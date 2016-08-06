@@ -1,7 +1,7 @@
 {
-  "name": "aframe-look-at-component",
-  "version": "0.1.1",
-  "description": "Look-At component for A-Frame.",
+  "name": "aframe-look-at-billboard-component",
+  "version": "0.2.0",
+  "description": "Look-At and Billboard components for A-Frame.",
   "main": "index.js",
   "scripts": {
     "build": "browserify examples/main.js -o examples/build.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blairmacintyre/aframe-look-at-component.git"
+    "url": "git+https://github.com/blairmacintyre/aframe-look-at-billboard-component.git"
   },
   "keywords": [
     "aframe",
@@ -25,12 +25,12 @@
     "mozvr",
     "webvr"
   ],
-  "author": "Blair MacIntyre <blair@macmynatt.com>",
+  "author": "Blair MacIntyre <blair@cc.gatech.edu>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/blairmacintyre/aframe-look-at-component/issues"
+    "url": "https://github.com/blairmacintyre/aframe-look-at-billboard-component/issues"
   },
-  "homepage": "https://github.com/blairmacintyre/aframe-look-at-component#readme",
+  "homepage": "https://github.com/blairmacintyre/aframe-look-at-billboard-component#readme",
   "devDependencies": {
     "aframe": "^0.2.0",
     "browserify": "^12.0.1",
