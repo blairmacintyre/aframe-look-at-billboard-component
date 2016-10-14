@@ -153,6 +153,7 @@ AFRAME.registerComponent('billboard', {
 
     // make sure camera is set
     if (target) { 
+      target.updateMatrixWorld();
       this.vector.setFromMatrixPosition(target.matrixWorld);
       if (object3D.parent) {
         object3D.parent.updateMatrixWorld();
